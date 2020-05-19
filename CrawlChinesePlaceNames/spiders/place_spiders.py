@@ -42,7 +42,7 @@ class CrawlPlaceSpiders(scrapy.Spider):
         """
         # 匹配省份链接
         province_list = response.xpath("//a[@href]")
-        province_list = province_list[3:4]
+        province_list = province_list[0:1]
         # 对每一个省份进行处理
         for province in province_list:
             # 省份名
@@ -84,10 +84,9 @@ class CrawlPlaceSpiders(scrapy.Spider):
             # 获取上一步暂存的item数据，重新构造item
             item = response.meta['item']
 
-            item["city_num"] = num
-            item["city_name"] = name
-            item["city_url"] = url
-
+            item = ChineseItem(province_num=item["province_num"], province_name=item["province_name"],
+                               province_url=item["province_url"],
+                               city_num=num, city_name=name, city_url=url)
             request = scrapy.Request(url=url, callback=self.parse_county, dont_filter=True)
             request.meta['item'] = item
             yield request
@@ -113,9 +112,10 @@ class CrawlPlaceSpiders(scrapy.Spider):
             # 获取上一步暂存的item数据，重新构造item
             item = response.meta['item']
 
-            item["county_num"] = num
-            item["county_name"] = name
-            item["county_url"] = url
+            item = ChineseItem(province_num=item["province_num"], province_name=item["province_name"],
+                               province_url=item["province_url"],
+                               city_num=item["city_num"], city_name=item["city_name"], city_url=item["city_url"],
+                               county_num=num, county_name=name, county_url=url)
 
             request = scrapy.Request(url=url, callback=self.parse_town, dont_filter=True)
             request.meta['item'] = item
@@ -142,9 +142,12 @@ class CrawlPlaceSpiders(scrapy.Spider):
             # 获取上一步暂存的item数据，重新构造item
             item = response.meta['item']
 
-            item["town_num"] = num
-            item["town_name"] = name
-            item["town_url"] = url
+            item = ChineseItem(province_num=item["province_num"], province_name=item["province_name"],
+                               province_url=item["province_url"],
+                               city_num=item["city_num"], city_name=item["city_name"], city_url=item["city_url"],
+                               county_num=item["county_num"], county_name=item["county_name"],
+                               county_url=item["county_url"],
+                               town_num=num, town_name=name, town_url=url)
 
             request = scrapy.Request(url=url, callback=self.parse_village, dont_filter=True)
             request.meta['item'] = item
@@ -173,8 +176,13 @@ class CrawlPlaceSpiders(scrapy.Spider):
             # 获取上一步暂存的item数据，重新构造item
             item = response.meta['item']
 
-            item["village_num"] = village_num
-            item["village_name"] = village_name
-            item["village_class"] = village_class
+            item = ChineseItem(province_num=item["province_num"], province_name=item["province_name"],
+                               province_url=item["province_url"],
+                               city_num=item["city_num"], city_name=item["city_name"], city_url=item["city_url"],
+                               county_num=item["county_num"], county_name=item["county_name"],
+                               county_url=item["county_url"],
+                               town_num=item["town_num"], town_name=item["town_name"], town_url=item["town_url"],
+                               village_num=village_num, village_name=village_name, village_class=village_class)
+
             # 这是最后一层直接返回item，不再需要scrapy.Request()函数
             yield item
