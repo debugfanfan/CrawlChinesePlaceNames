@@ -1,7 +1,7 @@
 # 爬虫（crawler）
 利用scrapy爬虫框架，爬取中国省市县镇村的数据，存储为json文件。
 
-**博客**：https://editor.csdn.net/md/?articleId=106234731
+**博客**：https://blog.csdn.net/qq_39393772/article/details/106234731
 
 ## 示例
 {
