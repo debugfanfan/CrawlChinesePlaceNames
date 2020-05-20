@@ -3,6 +3,7 @@
 # description   : 爬虫任务模块
 import scrapy
 from CrawlChinesePlaceNames.items import ChineseItem
+import time
 
 # 根网址
 base_url = 'http://www.stats.gov.cn/tjsj/tjbz/tjyqhdmhcxhfdm/2019/'
@@ -42,7 +43,7 @@ class CrawlPlaceSpiders(scrapy.Spider):
         """
         # 匹配省份链接
         province_list = response.xpath("//a[@href]")
-        province_list = province_list[0:1]
+        # province_list = province_list[3:4]
         # 对每一个省份进行处理
         for province in province_list:
             # 省份名
@@ -61,6 +62,7 @@ class CrawlPlaceSpiders(scrapy.Spider):
             request = scrapy.Request(url=province_url, callback=self.parse_city, dont_filter=True)
             # 暂时保存item数据
             request.meta['item'] = item
+
             yield request
 
     # 爬虫任务的第二层任务
@@ -79,7 +81,7 @@ class CrawlPlaceSpiders(scrapy.Spider):
             # 市url
             url = base_url + number.xpath("@href").extract()[0]
 
-            print("number：", num, " 名称：", name, " 链接：", url)
+            # print("number：", num, " 名称：", name, " 链接：", url)
 
             # 获取上一步暂存的item数据，重新构造item
             item = response.meta['item']
@@ -90,6 +92,7 @@ class CrawlPlaceSpiders(scrapy.Spider):
             request = scrapy.Request(url=url, callback=self.parse_county, dont_filter=True)
             request.meta['item'] = item
             yield request
+        print("yield all the links!")
 
     # 爬虫任务的第三层任务
     def parse_county(self, response):
@@ -107,7 +110,7 @@ class CrawlPlaceSpiders(scrapy.Spider):
             # 县url
             url = base_url + num[:2] + "/" + number.xpath("@href").extract()[0]
 
-            print("number：", num, " 名称：", name, " 链接：", url)
+            # print("number：", num, " 名称：", name, " 链接：", url)
 
             # 获取上一步暂存的item数据，重新构造item
             item = response.meta['item']
@@ -137,7 +140,7 @@ class CrawlPlaceSpiders(scrapy.Spider):
             # 镇url
             url = base_url + num[0:2] + "/" + num[2:4] + "/" + number.xpath("@href").extract()[0]
 
-            print("number：", num, " 名称：", name, " 链接：", url)
+            # print("number：", num, " 名称：", name, " 链接：", url)
 
             # 获取上一步暂存的item数据，重新构造item
             item = response.meta['item']
@@ -171,7 +174,7 @@ class CrawlPlaceSpiders(scrapy.Spider):
             # 村名
             village_name = village.xpath("td[3]/text()").extract()[0]
 
-            print("number：", village_num, " 村名：", village_name, " 分类代码：", village_class)
+            # print("number：", village_num, " 村名：", village_name, " 分类代码：", village_class)
 
             # 获取上一步暂存的item数据，重新构造item
             item = response.meta['item']

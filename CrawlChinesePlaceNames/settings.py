@@ -18,7 +18,7 @@ NEWSPIDER_MODULE = 'CrawlChinesePlaceNames.spiders'
 # USER_AGENT = 'CrawlChinesePlaceNames (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = False  # 不遵守
+# ROBOTSTXT_OBEY = False  # 不遵守
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 # CONCURRENT_REQUESTS = 32
@@ -63,6 +63,11 @@ ROBOTSTXT_OBEY = False  # 不遵守
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
+
+DOWNLOAD_DELAY = 1
+RANDOMIZE_DOWNLOAD_DELAY = True
+USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.100 Safari/537.36'
+# COOKIES_ENABLED = True
 # 保存json文件所需的设置
 ITEM_PIPELINES = {
     'CrawlChinesePlaceNames.pipelines.CrawlchineseplacenamesPipeline': 300,

@@ -13,6 +13,7 @@ class CrawlchineseplacenamesPipeline:
     def __init__(self):
         # 创建要保存到的文件
         self.file = codecs.open('data.json', 'w', 'utf-8')
+        # self.file.write("[")
 
     def process_item(self, item, spider):
         # 将item转为字典格式，一行一行写入
@@ -21,5 +22,6 @@ class CrawlchineseplacenamesPipeline:
         return item
 
     def close_spider(self, spider):
+        # self.file.write("]")
         # 关闭资源
         self.file.close()
